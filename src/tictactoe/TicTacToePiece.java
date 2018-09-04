@@ -4,7 +4,7 @@ import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
 
-public abstract class TicTacToePiece extends Piece {
+public class TicTacToePiece extends Piece {
 
 	private Color color;
 
@@ -17,13 +17,13 @@ public abstract class TicTacToePiece extends Piece {
 		return color;
 	}
 
-	public TicTacToePosition getChessPosition() {
+	public TicTacToePosition getTicTacToePosition() {
 		return TicTacToePosition.fromPosition(position);
 	}
 
-	protected boolean isThereOpponentPiece(Position position) {
+	protected boolean isThereAnyPiece(Position position) {
 		TicTacToePiece p = (TicTacToePiece) getBoard().piece(position);
-		return p != null && p.getColor() != color;
+		return p != null;
 	}
 
 }

@@ -1,7 +1,6 @@
 package application;
 
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
 import tictactoe.Color;
@@ -64,13 +63,7 @@ public class UI {
 		}
 	}
 
-	private static void printPiece(TicTacToePiece piece, boolean background, boolean selfBackground) {
-		if (selfBackground) {
-			System.out.print(ANSI_CYAN_BACKGROUND);
-		}
-		if (background) {
-			System.out.print(ANSI_BLUE_BACKGROUND);
-		}
+	private static void printPiece(TicTacToePiece piece) {
 		if (piece == null) {
 			System.out.print("-" + ANSI_RESET);
 		} else {
@@ -82,16 +75,13 @@ public class UI {
 		}
 	}
 
-	public static void printMatch(TicTacToeMatch ticTacToeMatch, List<TicTacToePiece> captured, String[] args) {
+	public static void printMatch(TicTacToeMatch ticTacToeMatch) {
 
 		printTabBoard(ticTacToeMatch.getPieces());
 
-		System.out.println();
-		System.out.println("Turn: " + ticTacToeMatch.getTurn());
-
 		if (ticTacToeMatch.getWin()) {
-			System.out.println("CHECKMATE!");
-			System.out.println("Winner: " + ticTacToeMatch.getCurrentPlayer());
+			System.out.println("TIC TAC MATE!");
+			System.out.println("Vencedor: " + ticTacToeMatch.getTurn());
 		}
 	}
 
@@ -102,23 +92,7 @@ public class UI {
 		for (int i = 0; i < rows; i++) {
 			System.out.print((rows - i) + "   ");
 			for (int j = 0; j < columns; j++) {
-				printPiece(pieces[i][j], false, false);
-				System.out.print("   ");
-			}
-			System.out.print("\n\n");
-		}
-		System.out.println("    a   b   c");
-	}
-
-	public static void printTabBoard(TicTacToePiece[][] pieces, boolean[][] possibleMoves, int selfRow,
-			int selfColumn) {
-		int rows = pieces.length;
-		int columns = pieces[0].length;
-
-		for (int i = 0; i < rows; i++) {
-			System.out.print((rows - i) + "   ");
-			for (int j = 0; j < columns; j++) {
-				printPiece(pieces[i][j], possibleMoves[i][j], (selfRow == i && selfColumn == j));
+				printPiece(pieces[i][j]);
 				System.out.print("   ");
 			}
 			System.out.print("\n\n");
