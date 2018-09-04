@@ -5,55 +5,44 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import chess.ChessException;
-import chess.ChessMatch;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import tictactoe.TicTacToeMatch;
+import tictactoe.TicTacToePiece;
+import tictactoe.TicTacToeException;
+import tictactoe.TicTacToePosition;
 
 public class Program {
 
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
-		ChessMatch chessMatch = new ChessMatch();
-		List<ChessPiece> captured = new ArrayList<>();
+		TicTacToeMatch ticTacToeMatch = new TicTacToeMatch();
+		List<TicTacToePiece> captured = new ArrayList<>();
 
-		while (!chessMatch.getCheckMate()) {
+		while (!ticTacToeMatch.getWin()) {
 			try {
 				UI.clearScreen();
-				UI.printMatch(chessMatch, captured, args);
+				UI.printMatch(ticTacToeMatch, captured, args);
 
 				System.out.println();
 				System.out.print("Source: ");
-				ChessPosition source = UI.readChessPosition(sc);
+				TicTacToePosition source = UI.readTicTacToePosition(sc);
 
-				boolean[][] possibleMoves = chessMatch.possibleMoves(source);
+				boolean[][] possibleMoves = ticTacToeMatch.possibleMoves(source);
 				UI.clearScreen();
-				if (args.length == 0) {
-					UI.printBoard(chessMatch.getPieces(), possibleMoves, source.toPosition().getRow(),
-							source.toPosition().getColumn());
-				} else {
-					UI.printTabBoard(chessMatch.getPieces(), possibleMoves, source.toPosition().getRow(),
-							source.toPosition().getColumn());
-				}
+				UI.printTabBoard(ticTacToeMatch.getPieces(), possibleMoves, source.toPosition().getRow(),
+						source.toPosition().getColumn());
 
 				System.out.println();
 				System.out.print("Target: ");
-				ChessPosition target = UI.readChessPosition(sc);
+				TicTacToePosition target = UI.readTicTacToePosition(sc);
 
-				ChessPiece capturedPiece = chessMatch.performChessMove(source, target);
+				TicTacToePiece capturedPiece = ticTacToeMatch.performChessMove(source, target);
 
 				if (capturedPiece != null) {
 					captured.add(capturedPiece);
 				}
 
-				if (chessMatch.getPromoted() != null) {
-					System.out.print("Enter piece for promotion (B/N/R/Q): ");
-					String type = sc.nextLine();
-					chessMatch.replacePromotedPiece(type);
-				}
-
-			} catch (ChessException e) {
+			} catch (TicTacToeException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();
 			} catch (InputMismatchException e) {
@@ -62,6 +51,6 @@ public class Program {
 			}
 		}
 		UI.clearScreen();
-		UI.printMatch(chessMatch, captured, args);
+		UI.printMatch(ticTacToeMatch, captured, args);
 	}
 }

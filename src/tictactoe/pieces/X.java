@@ -1,19 +1,19 @@
-package chess.pieces;
+package tictactoe.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
-import chess.ChessPiece;
-import chess.Color;
+import tictactoe.TicTacToePiece;
+import tictactoe.Color;
 
-public class Bishop extends ChessPiece {
+public class X extends TicTacToePiece {
 
-	public Bishop(Board board, Color color) {
+	public X(Board board, Color color) {
 		super(board, color);
 	}
 
 	@Override
 	public String toString() {
-		return "B";
+		return "X";
 	}
 
 	@Override

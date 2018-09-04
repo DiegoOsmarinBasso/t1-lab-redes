@@ -1,15 +1,13 @@
 package application;
 
-import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
-import chess.ChessMatch;
-import chess.ChessPiece;
-import chess.ChessPosition;
-import chess.Color;
+import tictactoe.Color;
+import tictactoe.TicTacToeMatch;
+import tictactoe.TicTacToePiece;
+import tictactoe.TicTacToePosition;
 
 public class UI {
 
@@ -54,19 +52,19 @@ public class UI {
 		System.out.flush();
 	}
 
-	public static ChessPosition readChessPosition(Scanner sc) {
+	public static TicTacToePosition readTicTacToePosition(Scanner sc) {
 		try {
 			String s = sc.nextLine();
 			char column = s.charAt(0);
 			int row = Integer.parseInt(s.substring(1));
 
-			return new ChessPosition(column, row);
+			return new TicTacToePosition(column, row);
 		} catch (RuntimeException e) {
-			throw new InputMismatchException("Error reading ChessPosition. Valid values are from a1 to h8.");
+			throw new InputMismatchException("Error reading TicTacToePosition. Valid values are from a1 to c3.");
 		}
 	}
 
-	private static void printPiece(ChessPiece piece, boolean background, boolean selfBackground) {
+	private static void printPiece(TicTacToePiece piece, boolean background, boolean selfBackground) {
 		if (selfBackground) {
 			System.out.print(ANSI_CYAN_BACKGROUND);
 		}
@@ -84,59 +82,20 @@ public class UI {
 		}
 	}
 
-	public static void printMatch(ChessMatch chessMatch, List<ChessPiece> captured, String[] args) {
-		if (args.length > 0) {
-			printTabBoard(chessMatch.getPieces());
-		} else {
-			printBoard(chessMatch.getPieces());
-		}
-		System.out.println();
-		printCapturedPieces(captured);
-		System.out.println();
-		System.out.println("Turn: " + chessMatch.getTurn());
+	public static void printMatch(TicTacToeMatch ticTacToeMatch, List<TicTacToePiece> captured, String[] args) {
 
-		if (!chessMatch.getCheckMate()) {
-			System.out.println("Waiting player: " + chessMatch.getCurrentPlayer());
-			if (chessMatch.getCheck()) {
-				System.out.println("CHECK!");
-			}
-		} else {
+		printTabBoard(ticTacToeMatch.getPieces());
+
+		System.out.println();
+		System.out.println("Turn: " + ticTacToeMatch.getTurn());
+
+		if (ticTacToeMatch.getWin()) {
 			System.out.println("CHECKMATE!");
-			System.out.println("Winner: " + chessMatch.getCurrentPlayer());
+			System.out.println("Winner: " + ticTacToeMatch.getCurrentPlayer());
 		}
 	}
 
-	public static void printBoard(ChessPiece[][] pieces) {
-		int rows = pieces.length;
-		int columns = pieces[0].length;
-
-		for (int i = 0; i < rows; i++) {
-			System.out.print((rows - i) + " ");
-			for (int j = 0; j < columns; j++) {
-				printPiece(pieces[i][j], false, false);
-				System.out.print(" ");
-			}
-			System.out.println();
-		}
-		System.out.println("  a b c d e f g h");
-	}
-
-	public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves, int selfRow, int selfColumn) {
-		int rows = pieces.length;
-		int columns = pieces[0].length;
-
-		for (int i = 0; i < rows; i++) {
-			System.out.print((rows - i) + " ");
-			for (int j = 0; j < columns; j++) {
-				printPiece(pieces[i][j], possibleMoves[i][j], (selfRow == i && selfColumn == j));
-				System.out.print(" ");
-			}
-			System.out.println();
-		}
-		System.out.println("  a b c d e f g h");
-	}
-
-	public static void printTabBoard(ChessPiece[][] pieces) {
+	public static void printTabBoard(TicTacToePiece[][] pieces) {
 		int rows = pieces.length;
 		int columns = pieces[0].length;
 
@@ -148,10 +107,11 @@ public class UI {
 			}
 			System.out.print("\n\n");
 		}
-		System.out.println("    a   b   c   d   e   f   g   h");
+		System.out.println("    a   b   c");
 	}
 
-	public static void printTabBoard(ChessPiece[][] pieces, boolean[][] possibleMoves, int selfRow, int selfColumn) {
+	public static void printTabBoard(TicTacToePiece[][] pieces, boolean[][] possibleMoves, int selfRow,
+			int selfColumn) {
 		int rows = pieces.length;
 		int columns = pieces[0].length;
 
@@ -163,17 +123,7 @@ public class UI {
 			}
 			System.out.print("\n\n");
 		}
-		System.out.println("    a   b   c   d   e   f   g   h");
-	}
-
-	private static void printCapturedPieces(List<ChessPiece> captured) {
-		List<ChessPiece> white = captured.stream().filter(x -> x.getColor() == Color.WHITE)
-				.collect(Collectors.toList());
-		List<ChessPiece> black = captured.stream().filter(x -> x.getColor() == Color.BLACK)
-				.collect(Collectors.toList());
-		System.out.println("Captured pieces:");
-		System.out.println("White: " + WHITE_BOLD_BRIGHT + Arrays.toString(white.toArray()) + ANSI_RESET);
-		System.out.println("Black: " + YELLOW_BOLD_BRIGHT + Arrays.toString(black.toArray()) + ANSI_RESET);
+		System.out.println("    a   b   c");
 	}
 
 }
