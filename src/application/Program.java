@@ -15,7 +15,7 @@ public class Program {
 		Scanner sc = new Scanner(System.in);
 		TicTacToeMatch ticTacToeMatch = new TicTacToeMatch();
 
-		while (!ticTacToeMatch.getWin()) {
+		while (!ticTacToeMatch.getWin() && !ticTacToeMatch.getDraw()) {
 			try {
 				UI.clearScreen();
 				UI.printMatch(ticTacToeMatch);
@@ -23,8 +23,9 @@ public class Program {
 				System.out.println();
 				System.out.print(ticTacToeMatch.getTurn() + " digite onde marcar: ");
 				TicTacToePosition source = UI.readTicTacToePosition(sc);
+				
 				ticTacToeMatch.placeNewPiece(source);
-
+				
 			} catch (TicTacToeException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();

@@ -1,5 +1,7 @@
 package boardgame;
 
+import tictactoe.TicTacToePosition;
+
 public class Board {
 
 	private int rows;
@@ -39,7 +41,7 @@ public class Board {
 
 	public void placePiece(Piece piece, Position position) {
 		if (thereIsAPiece(position)) {
-			throw new BoardException("Ja existe uma peça na posicao " + position + ".");
+			throw new BoardException("Ja existe uma peca na posicao " + TicTacToePosition.fromPosition(position) + ".");
 		}
 		pieces[position.getRow()][position.getColumn()] = piece;
 		piece.position = position;

@@ -80,8 +80,15 @@ public class UI {
 		printTabBoard(ticTacToeMatch.getPieces());
 
 		if (ticTacToeMatch.getWin()) {
+			System.out.println();
 			System.out.println("TIC TAC MATE!");
-			System.out.println("Vencedor: " + ticTacToeMatch.getTurn());
+			System.out.println("Vencedor: " + ticTacToeMatch.getTurn() + "!");
+		}
+		
+		if (ticTacToeMatch.getDraw()) {
+			System.out.println();
+			System.out.println("TIC TAC DRAW!");
+			System.out.println("O jogo empatou!");
 		}
 	}
 
