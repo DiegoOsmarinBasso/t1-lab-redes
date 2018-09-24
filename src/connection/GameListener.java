@@ -27,8 +27,7 @@ public class GameListener implements Runnable {
                 // Recebe a informação do servidor
                 String serverMessage = serverInput.readLine();
 
-                if (serverMessage.startsWith("~")) {
-                } else if (serverMessage.startsWith("+")) {
+                if (serverMessage.startsWith("+")) {
                     this.myTurn = true;
                 } else if (serverMessage.startsWith("-")) {
                     this.myTurn = false;
@@ -41,4 +40,4 @@ public class GameListener implements Runnable {
         }
     }
 
-} 
+}

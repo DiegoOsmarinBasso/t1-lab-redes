@@ -9,24 +9,24 @@ import tictactoe.TicTacToePosition;
 
 public class GameHandler implements Runnable {
 
-    private Socket connectionSock;
+    private Socket connectionSocket;
     private Socket[] socketList;
     private TicTacToeMatch game;
     private Figure player;
     private boolean named;
 
     public GameHandler(Socket socket, Socket[] socketList, TicTacToeMatch game, Figure player) {
-        this.connectionSock = socket;
+        this.connectionSocket = socket;
         this.socketList = socketList;
         this.game = game;
         this.player = player;
-        this.named = false;
     }
 
+    
     public void run() {
         try {
             BufferedReader playerInput = new BufferedReader(
-                    new InputStreamReader(this.connectionSock.getInputStream()));
+                    new InputStreamReader(this.connectionSocket.getInputStream()));
 
             switch (this.player) {
             case CIRCLE:
@@ -34,8 +34,7 @@ public class GameHandler implements Runnable {
                 sendMessage("-" + "\r\n");
                 break;
             case X:
-                sendMessage("\nOkay, now, could you please, insert the game's name: " + "\r\n");
-                this.game.setMatchName(playerInput.readLine().trim());
+                this.named = true;
                 sendMessage(
                         "\nMarvelous, you are player 'X', that means you will go first in the game as soon as the other player connect."
                                 + "\r\n\n");
@@ -44,12 +43,10 @@ public class GameHandler implements Runnable {
             default:
                 break;
             }
-
             while (!this.game.getWin() && !this.game.getDraw()) {
                 while (socketList[1] == null) {
                     Thread.sleep(250);
                 }
-                sendMessage("Alright there fella, player 2 connected!\n");
                 sendMessage(UI.printMatch(this.game) + "\r\n");
                 if (this.game.getCurrentPlayer() == this.player) {
                     // Turno do jogador atual
@@ -73,7 +70,11 @@ public class GameHandler implements Runnable {
                     sendMessage("+" + "\r\n");
                 }
             }
-            
+         // TODO recomecar partida depois que acabou
+            // TODO descobrir como printar a mensagem de fim de jogo para ambos, por
+            // enquanto so printa para o vencedor
+            sendMessage(UI.printMatch(this.game));
+            sendMessage("-" + "\r\n");
             sendMessage(UI.printMatch(this.game));
 
         } catch (IOException e) {
@@ -85,11 +86,33 @@ public class GameHandler implements Runnable {
 
     private void sendMessage(String message) {
         try {
-            DataOutputStream clientOutput = new DataOutputStream(this.connectionSock.getOutputStream());
+            DataOutputStream clientOutput = new DataOutputStream(this.connectionSocket.getOutputStream());
             clientOutput.writeBytes(message);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public boolean isGameAvailable() {
+        if (socketList[1] != null)
+            return false;
+        return true;
+    }
+
+    public String getGameInfo() {
+        return this.game.getMatchName();
+    }
+
+    public boolean isNamed() {
+        return named;
+    }
+
+    public TicTacToeMatch getGame() {
+        return game;
+    }
+
+    public Socket[] getSocketList() {
+        return socketList;
     }
 
 }
