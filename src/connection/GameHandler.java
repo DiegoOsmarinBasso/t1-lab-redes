@@ -22,12 +22,12 @@ public class GameHandler implements Runnable {
         this.player = player;
     }
 
-    
     public void run() {
         try {
             BufferedReader playerInput = new BufferedReader(
                     new InputStreamReader(this.connectionSocket.getInputStream()));
 
+            // Determina inicialmente quem são os jogadores desta partida
             switch (this.player) {
             case CIRCLE:
                 sendMessage("\nOk mate, you are player 'CIRCLE', and you will go second." + "\r\n");
@@ -43,12 +43,22 @@ public class GameHandler implements Runnable {
             default:
                 break;
             }
-            while (!this.game.getWin() && !this.game.getDraw()) {
+            while (true) {
                 while (socketList[1] == null) {
                     Thread.sleep(250);
                 }
                 sendMessage(UI.printMatch(this.game) + "\r\n");
-                if (this.game.getCurrentPlayer() == this.player) {
+                // Ultimas alterções de turno
+                if (game.getDraw() || game.getWin()) {
+                    if (this.game.getCurrentPlayer().equals(Figure.X)) {
+                        this.game.setCurrentPlayer(Figure.CIRCLE);
+                    } else {
+                        this.game.setWinner(Figure.CIRCLE);
+                        this.game.setCurrentPlayer(Figure.X);
+                    }
+                    break;
+                }
+                if (this.game.getCurrentPlayer() == this.player && !game.getDraw() && !game.getWin()) {
                     // Turno do jogador atual
                     sendMessage("Player " + player.toString() + " type the collum you want to mark:" + "\r\n");
                     String column = playerInput.readLine().trim();
@@ -56,27 +66,20 @@ public class GameHandler implements Runnable {
                     String row = playerInput.readLine().trim();
                     try {
                         this.game.placeNewPiece(new TicTacToePosition(column.toCharArray()[0], Integer.parseInt(row)));
-                        sendMessage("-" + "\r\n");
                     } catch (Exception e) {
                         sendMessage(e.getMessage() + "\n");
                     }
 
                 } else {
                     // Turno do outro jogador
-                    sendMessage("Please wait for opponent's move." + "\r\n");
+                    if (!game.getDraw() && !game.getWin())
+                        sendMessage("Please wait for opponent's move." + "\r\n");
                     while (this.game.getCurrentPlayer() != this.player) {
                         Thread.sleep(500);
                     }
-                    sendMessage("+" + "\r\n");
                 }
             }
-         // TODO recomecar partida depois que acabou
-            // TODO descobrir como printar a mensagem de fim de jogo para ambos, por
-            // enquanto so printa para o vencedor
-            sendMessage(UI.printMatch(this.game));
-            sendMessage("-" + "\r\n");
-            sendMessage(UI.printMatch(this.game));
-
+            
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (InterruptedException z) {
@@ -84,6 +87,7 @@ public class GameHandler implements Runnable {
         }
     }
 
+    // Método que formata e envia a mensagem para o cliente
     private void sendMessage(String message) {
         try {
             DataOutputStream clientOutput = new DataOutputStream(this.connectionSocket.getOutputStream());
@@ -92,7 +96,7 @@ public class GameHandler implements Runnable {
             System.out.println(e.getMessage());
         }
     }
-
+    //Verifica se existe espaço na sala para um jogador entrar
     public boolean isGameAvailable() {
         if (socketList[1] != null)
             return false;

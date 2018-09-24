@@ -13,7 +13,6 @@ public class GameClient {
             Scanner in = new Scanner(System.in);
             String hostname = in.nextLine();
             int port = 7654;
-            boolean myTurn = true;
             System.out.println("Connecting to game server on port " + port);
             Socket connectionSock = new Socket(hostname, port);
 
@@ -21,20 +20,16 @@ public class GameClient {
 
             System.out.println("Connection made.");
 
-            // Start a thread to listen and display data sent by the server
+            // Comeca uma thread para ouvir e mostrar a informacao vinda do servidor
             GameListener listener = new GameListener(connectionSock);
             Thread theThread = new Thread(listener);
             theThread.start();
 
             while (serverOutput != null) {
                 String data = in.nextLine();
-                if (!myTurn) {
-                    System.out.println("Please wait for your turn.");
-                }
-                else {
-                    serverOutput.writeBytes(data + "\n");
-                }
+                serverOutput.writeBytes(data + "\n");
             }
+
             System.out.println("Connection lost.");
         } catch (IOException e) {
             System.out.println(e.getMessage());

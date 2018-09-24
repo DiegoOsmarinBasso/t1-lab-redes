@@ -15,15 +15,13 @@ public class GameServer {
         handlers = new ArrayList<>();
     }
 
-    private void getConnection() {
+    private void getConnection() throws InterruptedException {
         // Esperando a conexão dos clientes
-
-        // TODO, bug quando nao existem jogos, mas o usuario pede para entrar em um, o
-        // mesmo fica preso la ( na real toda a comunicacao entre usuarios ta bugada
         try {
             System.out.println("Waiting for player connections on port 7654.");
             ServerSocket serverSocket = new ServerSocket(7654);
             while (true) {
+                // Recebe a conexão do cliente
                 Socket connectionSocket = serverSocket.accept();
                 TicTacToeMatch game = new TicTacToeMatch();
                 DataOutputStream clientOutput = new DataOutputStream(connectionSocket.getOutputStream());
@@ -52,7 +50,7 @@ public class GameServer {
                     handlers.add(gameHandler);
                     Thread thread = new Thread(gameHandler);
                     thread.start();
-
+                    // Jogador entra em um jogo
                 } else {
                     Optional<GameHandler> handler = findHandler(response);
                     while (!handler.isPresent()) {
@@ -60,11 +58,12 @@ public class GameServer {
                         response = playerInput.readLine().trim();
                         handler = findHandler(response);
                     }
-
+                    //Configurções do jogo são criadas
                     Socket[] socketList = handler.get().getSocketList();
                     socketList[1] = connectionSocket;
                     Figure player = Figure.CIRCLE;
-                    GameHandler gameHandler = new GameHandler(connectionSocket, socketList, handler.get().getGame(), player);
+                    GameHandler gameHandler = new GameHandler(connectionSocket, socketList, handler.get().getGame(),
+                            player);
                     handlers.add(gameHandler);
                     Thread thread = new Thread(gameHandler);
                     thread.start();
@@ -79,11 +78,12 @@ public class GameServer {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         GameServer server = new GameServer();
         server.getConnection();
     }
-
+    
+    //Método que lista os jogos disponíveis
     private String listAvailableGames() {
         StringBuilder str = new StringBuilder();
         for (GameHandler handler : handlers) {
@@ -95,7 +95,7 @@ public class GameServer {
             return "No available games. Sorry mate :(\n";
         return str.toString();
     }
-
+    //Método que verifica se nome do jogo está disponível
     private boolean isNameAvailable(String name) {
         if (name.equals("1") || name.length() < 1)
             return false;
@@ -105,7 +105,7 @@ public class GameServer {
         }
         return true;
     }
-
+    //Classe auxiliar que acha o handler desejado
     private Optional<GameHandler> findHandler(String name) {
         return handlers.stream().filter(g -> g.getGameInfo().equals(name)).findFirst();
     }

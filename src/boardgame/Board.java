@@ -27,21 +27,21 @@ public class Board {
 
 	public Piece piece(int row, int column) {
 		if (!positionExists(row, column)) {
-			throw new BoardException("Posicao fora do tabuleiro.");
+			throw new BoardException("Position out of the board.");
 		}
 		return pieces[row][column];
 	}
 
 	public Piece piece(Position position) {
 		if (!positionExists(position)) {
-			throw new BoardException("Posicao fora do tabuleiro.");
+			throw new BoardException("Position out of the board.");
 		}
 		return pieces[position.getRow()][position.getColumn()];
 	}
 
 	public void placePiece(Piece piece, Position position) {
 		if (thereIsAPiece(position)) {
-			throw new BoardException("Ja existe uma peca na posicao " + TicTacToePosition.fromPosition(position) + ".");
+			throw new BoardException("There are already a piece at the board " + TicTacToePosition.fromPosition(position) + ".");
 		}
 		pieces[position.getRow()][position.getColumn()] = piece;
 		piece.position = position;
@@ -57,7 +57,7 @@ public class Board {
 
 	public boolean thereIsAPiece(Position position) {
 		if (!positionExists(position)) {
-			throw new BoardException("Posicao fora do tabuleiro.");
+			throw new BoardException("Position out of the board.");
 		}
 		return piece(position) != null;
 	}
