@@ -21,7 +21,7 @@ public class Program {
 				UI.printMatch(ticTacToeMatch);
 
 				System.out.println();
-				System.out.print(ticTacToeMatch.getTurn() + " digite onde marcar: ");
+				System.out.print(ticTacToeMatch.getTurn() + ", type where you wanto to mark: ");
 				TicTacToePosition source = UI.readTicTacToePosition(sc);
 				
 				ticTacToeMatch.placeNewPiece(source);

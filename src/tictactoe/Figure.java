@@ -1,13 +1,13 @@
 package tictactoe;
 
-public enum Color {
-	WHITE("BRANCO", 1),
-	BLACK("PRETO", 2);
+public enum Figure{
+	CIRCLE("CIRCLE", 1),
+	X("X", 2);
 	
 	private String name;
 	private int value;
 	
-	private Color(String name, int value) {
+	private Figure(String name, int value) {
 		this.name = name;
 		this.value = value;
 	}

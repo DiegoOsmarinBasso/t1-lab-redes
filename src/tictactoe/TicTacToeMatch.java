@@ -15,16 +15,17 @@ public class TicTacToeMatch {
 	protected static final char COLUMN_INITIAL_LETTER = 'a';
 
 	private Board board;
-	private Color currentPlayer;
+	private Figure currentPlayer;
 	private int turn;
 	private boolean win;
 	private boolean draw;
+	private String matchName;
 
 	private List<Piece> piecesOnTheBoard = new ArrayList<>();
 
 	public TicTacToeMatch() {
 		board = new Board(BOARD_ROWS, BOARD_COLUMNS);
-		currentPlayer = Color.WHITE;
+		currentPlayer = Figure.X;
 		turn = 1;
 		win = false;
 		draw = false;
@@ -34,7 +35,7 @@ public class TicTacToeMatch {
 		return currentPlayer.getName();
 	}
 
-	public Color getCurrentPlayer() {
+	public Figure getCurrentPlayer() {
 		return currentPlayer;
 	}
 
@@ -45,8 +46,16 @@ public class TicTacToeMatch {
 	public boolean getDraw() {
 		return draw;
 	}
+	
+	public String getMatchName() {
+        return matchName;
+    }
 
-	public TicTacToePiece[][] getPieces() {
+    public void setMatchName(String matchName) {
+        this.matchName = matchName;
+    }
+
+    public TicTacToePiece[][] getPieces() {
 		TicTacToePiece[][] mat = new TicTacToePiece[board.getRows()][board.getColumns()];
 
 		for (int i = 0; i < board.getRows(); i++) {
@@ -59,12 +68,12 @@ public class TicTacToeMatch {
 	}
 
 	private void nextTurn() {
-		currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
+		currentPlayer = (currentPlayer == Figure.X) ? Figure.CIRCLE : Figure.X;
 		turn++;
 	}
 
 	public void placeNewPiece(TicTacToePosition source) {
-		Piece piece = (currentPlayer == Color.WHITE) ? new X(board, Color.WHITE) : new O(board, Color.BLACK);
+		Piece piece = (currentPlayer == Figure.X) ? new X(board, Figure.X) : new O(board, Figure.CIRCLE);
 		board.placePiece(piece, new TicTacToePosition(source.getColumn(), source.getRow()).toPosition());
 		piecesOnTheBoard.add(piece);
 
@@ -88,11 +97,11 @@ public class TicTacToeMatch {
 		// verifica diagonais
 		int d1 = 0, d2 = 0;
 		for (int i = 0; i < BOARD_ROWS; i++) {
-			if (board.piece(i, i) != null && ((TicTacToePiece) board.piece(i, i)).getColor() == currentPlayer) {
+			if (board.piece(i, i) != null && ((TicTacToePiece) board.piece(i, i)).getFigure()== currentPlayer) {
 				d1 += currentPlayer.getValue();
 			}
 			if (board.piece(i, BOARD_ROWS - i - 1) != null
-					&& ((TicTacToePiece) board.piece(i, BOARD_ROWS - i - 1)).getColor() == currentPlayer) {
+					&& ((TicTacToePiece) board.piece(i, BOARD_ROWS - i - 1)).getFigure() == currentPlayer) {
 				d2 += currentPlayer.getValue();
 			}
 		}
@@ -104,7 +113,7 @@ public class TicTacToeMatch {
 		for (int i = 0; i < BOARD_ROWS; i++) {
 			int h = 0;
 			for (int j = 0; j < BOARD_COLUMNS; j++) {
-				if (board.piece(i, j) != null && ((TicTacToePiece) board.piece(i, j)).getColor() == currentPlayer) {
+				if (board.piece(i, j) != null && ((TicTacToePiece) board.piece(i, j)).getFigure() == currentPlayer) {
 					h += currentPlayer.getValue();
 				}
 			}
@@ -117,7 +126,7 @@ public class TicTacToeMatch {
 		for (int j = 0; j < BOARD_COLUMNS; j++) {
 			int v = 0;
 			for (int i = 0; i < BOARD_ROWS; i++) {
-				if (board.piece(i, j) != null && ((TicTacToePiece) board.piece(i, j)).getColor() == currentPlayer) {
+				if (board.piece(i, j) != null && ((TicTacToePiece) board.piece(i, j)).getFigure() == currentPlayer) {
 					v += currentPlayer.getValue();
 				}
 			}

@@ -6,24 +6,24 @@ import boardgame.Position;
 
 public class TicTacToePiece extends Piece {
 
-	private Color color;
+    private Figure figure;
 
-	public TicTacToePiece(Board board, Color color) {
-		super(board);
-		this.color = color;
-	}
+    public TicTacToePiece(Board board, Figure figure) {
+        super(board);
+        this.figure = figure;
+    }
 
-	public Color getColor() {
-		return color;
-	}
+    public Figure getFigure() {
+        return figure;
+    }
 
-	public TicTacToePosition getTicTacToePosition() {
-		return TicTacToePosition.fromPosition(position);
-	}
+    public TicTacToePosition getTicTacToePosition() {
+        return TicTacToePosition.fromPosition(position);
+    }
 
-	protected boolean isThereAnyPiece(Position position) {
-		TicTacToePiece p = (TicTacToePiece) getBoard().piece(position);
-		return p != null;
-	}
+    protected boolean isThereAnyPiece(Position position) {
+        TicTacToePiece p = (TicTacToePiece) getBoard().piece(position);
+        return p != null;
+    }
 
 }

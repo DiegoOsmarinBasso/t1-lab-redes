@@ -1,13 +1,13 @@
 package tictactoe.pieces;
 
 import boardgame.Board;
-import tictactoe.Color;
+import tictactoe.Figure;
 import tictactoe.TicTacToePiece;
 
 public class O extends TicTacToePiece {
 
-	public O(Board board, Color color) {
-		super(board, color);
+	public O(Board board, Figure figure) {
+		super(board, figure);
 	}
 
 	@Override
