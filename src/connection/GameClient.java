@@ -9,7 +9,9 @@ public class GameClient {
 
     public static void main(String[] args) {
         try {
-            String hostname = "localhost";
+            System.out.println("Hello Mate!\nFirst things first, type on the host in which you want to connect:");
+            Scanner in = new Scanner(System.in);
+            String hostname = in.nextLine();
             int port = 7654;
             boolean myTurn = true;
             System.out.println("Connecting to game server on port " + port);
@@ -24,15 +26,11 @@ public class GameClient {
             Thread theThread = new Thread(listener);
             theThread.start();
 
-            Scanner in = new Scanner(System.in);
             while (serverOutput != null) {
                 String data = in.nextLine();
                 if (!myTurn) {
                     System.out.println("Please wait for your turn.");
                 }
-                // else if ((data.equals("0") || data.equals("1")) || data.equals("2")) {
-                //
-                // }
                 else {
                     serverOutput.writeBytes(data + "\n");
                 }
